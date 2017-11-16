@@ -42,6 +42,8 @@ The mock users are injected in the context in server/server.js
 Mutations are not implemented. But the permissions should work similarly for mutations as they do for queries,
 the main difference is that instead of permissions for READ operation, 
 permissions for  UPDATE, CREATE or DELETE operations are used.
+- Cannot batch db requests on backend. The production app will have some query batcher on backens
+
 
 
 #### DB Dump
