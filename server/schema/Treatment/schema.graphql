@@ -1,0 +1,4 @@
+type Treatment {
+  id: ID!
+  name: String
+}

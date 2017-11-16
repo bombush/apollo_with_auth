@@ -1,0 +1,7 @@
+ type Query {
+    surgeon: Surgeon
+    surgeons: [Surgeon]
+    treatment(id: ID): Treatment
+    treatments: [Treatment]
+    treatmentsForSurgeon(surgeonId: ID): [Treatment] 
+  }

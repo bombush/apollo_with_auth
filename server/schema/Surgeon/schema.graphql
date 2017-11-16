@@ -1,0 +1,6 @@
+type Surgeon {
+  id: ID!
+  username: String
+  name: String
+  treatments: [Treatment]!
+}
