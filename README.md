@@ -45,6 +45,8 @@ permissions for  UPDATE, CREATE or DELETE operations are used.
 
 
 #### DB Dump
+``apollo_mock.sql.gz``
 A DB dump is in the repository.
+Please create a table with collation utf8\_czech\_ci
 This is a very poor mock database just for demo purposes.
 Required MySQL. The final project will use PostgreSQL instead.
