@@ -12,7 +12,7 @@
     "babel-cli": "^6.26.0",
     "babel-core": "6.26.0",
     "babel-eslint": "7.2.3",
-    "babel-jest": "20.0.3",
+    "babel-jest": "^21.2.0",
     "babel-loader": "^7.1.2",
     "babel-plugin-inline-import": "^2.0.6",
     "babel-plugin-syntax-async-functions": "^6.13.0",
@@ -45,7 +45,7 @@
     "graphql-tools": "^2.7.2",
     "html-webpack-plugin": "2.29.0",
     "isomorphic-fetch": "^2.2.1",
-    "jest": "20.0.4",
+    "jest": "^21.2.1",
     "mongodb": "^2.2.33",
     "mysql2": "^1.5.0",
     "object-assign": "4.1.1",
@@ -75,24 +75,25 @@
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "server:start": "NODE_ENV=production node ./server/index.js"
+    "server:start": "NODE_ENV=production node ./server/index.js",
+    "test": "jest --no-cache"
   },
   "jest": {
     "collectCoverageFrom": [
-      "src/**/*.{js,jsx,mjs}"
+      "server/**/*.{js,jsx,mjs}"
     ],
     "setupFiles": [
       "<rootDir>/config/polyfills.js"
     ],
     "testMatch": [
-      "<rootDir>/src/**/__tests__/**/*.{js,jsx,mjs}",
-      "<rootDir>/src/**/?(*.)(spec|test).{js,jsx,mjs}"
+      "<rootDir>/server/**/__tests__/**/*.{js,jsx,mjs}"
     ],
     "testEnvironment": "node",
     "testURL": "http://localhost",
     "transform": {
       "^.+\\.(js|jsx|mjs)$": "<rootDir>/node_modules/babel-jest",
       "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
+      "^.+\\.graphql$": "<rootDir>/config/jest/graphqlTransform.js",
       "^(?!.*\\.(js|jsx|mjs|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
     },
     "transformIgnorePatterns": [
@@ -109,6 +110,14 @@
       "web.jsx",
       "jsx",
       "node"
+    ],
+    "coverageReporters": [
+      "lcov",
+      "html"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "./dist"
     ]
   },
   "babel": {
@@ -120,5 +129,8 @@
     "extends": "react-app"
   },
   "main": "index.js",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "jest-cli": "^21.2.1"
+  }
 }
