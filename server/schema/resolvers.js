@@ -1,3 +1,5 @@
+import Surgeon from './Surgeon/resolvers.js';
+
 export default {
   Query: {
     surgeons: (root, data, context) => {
@@ -11,16 +13,9 @@ export default {
         }
       }, context)///surgeonAuthPost(findAll(surgeonAuthPre(config))(Users))
     },
+
+    me: (root, data, context) => context.user
   },
 
-  Surgeon: {
-    treatments:
-      (root, data, context) => {
-        return context.model.Treatment.findAll({
-          where: {
-            user_id: root.id
-          }
-        }, context) || [];
-      }
-  }
+  Surgeon
 }
