@@ -17,6 +17,6 @@ const typeDefs =
   + '\n'
   + query;
 
-console.log('TYPEDEFS: ', typeDefs);
+//console.log('TYPEDEFS: ', typeDefs);
 
 export default makeExecutableSchema({ typeDefs, resolvers });

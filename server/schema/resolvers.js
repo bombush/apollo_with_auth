@@ -1,4 +1,5 @@
 import Surgeon from './Surgeon/resolvers.js';
+import User from './User/resolvers.js';
 
 export default {
   Query: {
@@ -17,5 +18,6 @@ export default {
     me: (root, data, context) => context.user
   },
 
-  Surgeon
+  Surgeon,
+  User
 }
