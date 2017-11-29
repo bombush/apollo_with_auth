@@ -2,31 +2,24 @@ import {
   GraphQLObjectType,
   GraphQLID,
   GraphQLString,
-  GraphQLList
+  GraphQLList,
 } from 'graphql';
 
 import joinMonster from 'join-monster';
 
 import Treatment from '../Treatment/schema';
+import Surgeon from '../Surgeon/schema';
 import Procedure from '../Procedure/schema';
-import resolvers from './resolvers';
+//import resolvers from './resolvers';
 
-const surgeon = new GraphQLObjectType({
-  name: 'Surgeon',
+const patient = new GraphQLObjectType({
+  name: 'Patient',
   fields: () => ({
     id: {
       type: GraphQLID
     },
-    username: {
-      type: GraphQLString
-    },
     name: {
       type: GraphQLString
-    },
-    treatments: {
-      type: new GraphQLList(Treatment),
-      
-      sqlJoin: (parentTable, childTable, args) => `${parentTable}.id = ${childTable}.user_id`
     },
     procedures: {
       type: new GraphQLList(Procedure),
@@ -36,8 +29,8 @@ const surgeon = new GraphQLObjectType({
     }
   }),
 
-  sqlTable: 'user',
+  sqlTable: 'patient',
   uniqueKey: 'id'
 });
 
-export default surgeon;
+export default patient;

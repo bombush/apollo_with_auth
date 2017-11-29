@@ -10,6 +10,7 @@ import {
   GraphQLString,
   GraphQLList
 } from 'graphql';
+import joinMonster from 'join-monster';
 
 /**
  *  type Query {
@@ -33,10 +34,23 @@ import {
     },
     surgeon: {
       type: Surgeon,
+      args: { id: { type: GraphQLID} },
+      resolve: (parent, args, context, resolveInfo) => {
+        return joinMonster(resolveInfo, {}, sql => {
+          return context.sequelize.query(sql, { type: context.sequelize.QueryTypes.SELECT})
+        }, {dialect: 'mysql'})
+      },
+      where: (usersTable, args, context, tables) => {
+        if (args.id) return `${usersTable}.id = ${args.id}`;
+      }
     },
     surgeons: {
       type: new GraphQLList(Surgeon),
-      resolve: resolvers.surgeons
+      resolve: (parent, args, context, resolveInfo) => {
+        return joinMonster(resolveInfo, {}, sql => {
+          return context.sequelize.query(sql, { type: context.sequelize.QueryTypes.SELECT})
+        }, {dialect: 'mysql'})
+      }
     },
     treatment: {
       type: Treatment,
@@ -45,15 +59,29 @@ import {
       }
     },
     treatments: {
-      type: new GraphQLList(Treatment)
+      type: new GraphQLList(Treatment),
+      args: {
+        surgeonId: { type: GraphQLID },
+        surgeonName: { type: GraphQLString }
+      },
+      resolve: (parent, args, context, resolveInfo) => {
+        return joinMonster(resolveInfo, {}, sql => {
+          return context.sequelize.query(sql, { type: context.sequelize.QueryTypes.SELECT})
+        }, {dialect: 'mysql'})
+      },
+      where: (usersTable, args, context, tables) => {
+        console.log('TABLES:', tables);
+        //return `${usersTable}.id = ${context.id}`
+      }
     },
+    /*
     treatmentsForSurgeon: {
       type: new GraphQLList(Treatment),
       args: {
         surgeonId: { type: GraphQLID }
       },
       resolve: resolvers.treatmentsForSurgeon
-    }
+    }*/
   })
 });
 

@@ -47,6 +47,7 @@
     "html-webpack-plugin": "2.29.0",
     "isomorphic-fetch": "^2.2.1",
     "jest": "^21.2.1",
+    "join-monster": "^2.0.15",
     "mongodb": "^2.2.33",
     "mysql2": "^1.5.0",
     "object-assign": "4.1.1",
