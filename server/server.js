@@ -22,7 +22,8 @@ const sequelize = new Sequelize(
     host: 'localhost',
     port: '3307',
     dialect: 'mysql',
-    socketPath: '/var/run/mysqld/mysqld.sock'
+    socketPath: '/var/run/mysqld/mysqld.sock',
+    timezone : "+01:00",
   }
 );
 
