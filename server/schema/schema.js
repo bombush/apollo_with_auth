@@ -1,14 +1,22 @@
 import { makeExecutableSchema } from 'graphql-tools';
+import { GraphQLSchema } from 'graphql';
 
+/*
 import surgeonSchema from './Surgeon/schema.graphql';
 import treatmentSchema from './Treatment/schema.graphql';
 import userSchema from './User/schema.graphql';
 import query from './query.graphql';
+import resolvers from './resolvers';*/
+import Query from './Query/schema';
 
-import resolvers from './resolvers';
 
+const schema = new GraphQLSchema({
+  query: Query
+});
 
-const typeDefs = 
+export default schema;
+
+/*const typeDefs = 
   surgeonSchema
   + '\n'
   + treatmentSchema
@@ -19,4 +27,4 @@ const typeDefs =
 
 //console.log('TYPEDEFS: ', typeDefs);
 
-export default makeExecutableSchema({ typeDefs, resolvers });
+export default makeExecutableSchema({ typeDefs, resolvers });*/
