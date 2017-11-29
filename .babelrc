@@ -1,5 +1,5 @@
 {
-  "presets": [ "es2015", "es2017" ],
+  "presets": [ "es2015", "es2017", "react-app" ],
   "plugins": [
     "babel-plugin-inline-import", // plugin for importing text files as string (for .graphql)
     "babel-plugin-transform-object-rest-spread" // plugin for transforming object spread syntax ({...object})
