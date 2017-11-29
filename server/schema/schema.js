@@ -1,5 +1,5 @@
-import { makeExecutableSchema } from 'graphql-tools';
 import { GraphQLSchema } from 'graphql';
+import { makeExecutableSchema } from 'graphql-tools';
 
 /*
 import surgeonSchema from './Surgeon/schema.graphql';
@@ -8,10 +8,12 @@ import userSchema from './User/schema.graphql';
 import query from './query.graphql';
 import resolvers from './resolvers';*/
 import Query from './Query/schema';
+import Mutation from './Mutation/schema';
 
 
 const schema = new GraphQLSchema({
-  query: Query
+  query: Query,
+  mutation: Mutation
 });
 
 export default schema;

@@ -30,9 +30,15 @@ const surgeon = new GraphQLObjectType({
     },
     procedures: {
       type: new GraphQLList(Procedure),
-      
-      sqlJoin: (patientTable, procedureTable, args) => 
-        `${patientTable}.id = ${procedureTable}.patient_id`
+      args: { date: { type: GraphQLString } },
+
+      sqlJoin: (patientTable, procedureTable, args) => {
+        if(args.date) {
+          return `${patientTable}.id = ${procedureTable}.user_id AND ${procedureTable}.date='${args.date}'`;
+        }
+
+        return `${patientTable}.id = ${procedureTable}.user_id`;
+      }
     }
   }),
 

@@ -1,6 +1,8 @@
 import User from '../User/schema';
 import Surgeon from '../Surgeon/schema';
 import Treatment from '../Treatment/schema';
+import Patient from '../Patient/schema';
+import Procedure from '../Procedure/schema';
 
 import resolvers from './resolvers';
 
@@ -37,6 +39,7 @@ import joinMonster from 'join-monster';
       args: { id: { type: GraphQLID} },
       resolve: (parent, args, context, resolveInfo) => {
         return joinMonster(resolveInfo, {}, sql => {
+          sql = sql.replace('JOIN procedure', 'JOIN `procedure`')
           return context.sequelize.query(sql, { type: context.sequelize.QueryTypes.SELECT})
         }, {dialect: 'mysql'})
       },
@@ -48,6 +51,7 @@ import joinMonster from 'join-monster';
       type: new GraphQLList(Surgeon),
       resolve: (parent, args, context, resolveInfo) => {
         return joinMonster(resolveInfo, {}, sql => {
+          sql = sql.replace('JOIN procedure', 'JOIN `procedure`')
           return context.sequelize.query(sql, { type: context.sequelize.QueryTypes.SELECT})
         }, {dialect: 'mysql'})
       }
@@ -66,6 +70,7 @@ import joinMonster from 'join-monster';
       },
       resolve: (parent, args, context, resolveInfo) => {
         return joinMonster(resolveInfo, {}, sql => {
+          sql = sql.replace('JOIN procedure', 'JOIN `procedure`')
           return context.sequelize.query(sql, { type: context.sequelize.QueryTypes.SELECT})
         }, {dialect: 'mysql'})
       },
@@ -74,6 +79,34 @@ import joinMonster from 'join-monster';
         //return `${usersTable}.id = ${context.id}`
       }
     },
+    patients: {
+      type: new GraphQLList(Patient),
+      resolve: (parent, args, context, resolveInfo) => {
+        return joinMonster(resolveInfo, {}, sql => {
+          sql = sql.replace('JOIN procedure', 'JOIN `procedure`')
+          return context.sequelize.query(sql, { type: context.sequelize.QueryTypes.SELECT})
+        }, {dialect: 'mysql'})
+      }
+    },
+
+    procedures: {
+      type: new GraphQLList(Procedure),
+      resolve: (parent, args, context, resolveInfo) => {
+        return joinMonster(resolveInfo, {}, sql => {
+          sql = sql.replace('JOIN procedure', 'JOIN `procedure`');
+          sql = sql.replace('FROM procedure', 'FROM `procedure`')
+          return context.sequelize.query(sql, { type: context.sequelize.QueryTypes.SELECT})
+        }, {dialect: 'mysql'})
+      },
+      args: {
+        date: { type: GraphQLString },
+        id: { type: GraphQLID }
+      },
+      where: (procedureTable, args, context, tables) => {
+        if (args.date) return `${procedureTable}.date = "${args.date}"`;
+        if (args.id) return `${procedureTable}.id = "${args.id}"`;
+      }
+    }
     /*
     treatmentsForSurgeon: {
       type: new GraphQLList(Treatment),
