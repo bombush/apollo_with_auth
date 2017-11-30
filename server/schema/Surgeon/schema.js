@@ -15,7 +15,7 @@ const surgeon = new GraphQLObjectType({
   name: 'Surgeon',
   fields: () => ({
     id: {
-      type: GraphQLID
+      type: GraphQLID,
     },
     username: {
       type: GraphQLString
@@ -26,19 +26,30 @@ const surgeon = new GraphQLObjectType({
     treatments: {
       type: new GraphQLList(Treatment),
       
-      sqlJoin: (parentTable, childTable, args) => `${parentTable}.id = ${childTable}.user_id`
+      sqlJoin: (parentTable, childTable, args) => `${parentTable}.id = ${childTable}.user_id`,
+
     },
     procedures: {
       type: new GraphQLList(Procedure),
       args: { date: { type: GraphQLString } },
 
-      sqlJoin: (patientTable, procedureTable, args) => {
-        if(args.date) {
-          return `${patientTable}.id = ${procedureTable}.user_id AND ${procedureTable}.date='${args.date}'`;
-        }
+      sqlJoin: (patientTable, procedureTable, args, context, ast) => {
+        const join = (() => {
+          if(args.date) {
+            return `${patientTable}.id = ${procedureTable}.user_id AND ${procedureTable}.date='${args.date}'`;
+          }
 
-        return `${patientTable}.id = ${procedureTable}.user_id`;
-      }
+          return `${patientTable}.id = ${procedureTable}.user_id`;
+        })();
+
+        return `${join}`;
+      },
+      /*
+      sqlBatch: {
+        thisKey: 'user_id',
+        parentKey: 'id'
+      }*/
+      resolve: (root, data) => console.log('DATA:', data) || root.procedures
     }
   }),
 

@@ -18,12 +18,13 @@ import prepareRepositories from './db.js';
 const sequelize = new Sequelize(
   {
     database: 'apollo_mock',
-    username: 'root',
+    username: 'postgres',
+    password: 'imolol',
     host: 'localhost',
-    port: '3307',
-    dialect: 'mysql',
-    socketPath: '/var/run/mysqld/mysqld.sock',
-    timezone : "+01:00",
+    port: '5432',
+    dialect: 'postgres',
+    //socketPath: '/var/run/mysqld/mysqld.sock',
+   // timezone : "+01:00",
   }
 );
 
