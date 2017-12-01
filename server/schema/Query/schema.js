@@ -44,7 +44,7 @@ import joinMonster from 'join-monster';
         }, {dialect: 'pg'})
       },
       where: (usersTable, args, context, tables) => {
-        if (args.id) return `(${usersTable}.id = ${args.id} OR 1=1)`;
+        if (args.id) return `(${usersTable}.id = ${args.id})`;
       }
     },
     surgeons: {
