@@ -14,7 +14,7 @@ import Treatment from '../Treatment/schema';
 import Procedure from '../Procedure/schema';
 import resolvers from './resolvers';
 //import  SecureGraphQLObjectType from '../../core/graphql/SecureGraphQLObjectType';
-import createSecureGraphQLObjectType from '../../core/graphql/authorized/createAuthorizedGraphQLObjectType';
+import createAuthorizedGraphQLQueryType from '../../core/graphql/authorized/createAuthorizedGraphQLQueryType';
 
 const PageInfo = new GraphQLObjectType({
   name: 'PageInfo',
@@ -40,7 +40,7 @@ const ProcedureConnection = new GraphQLObjectType({
   })
 });
 
-const surgeon = createSecureGraphQLObjectType({
+const surgeon = createAuthorizedGraphQLQueryType({
   name: 'Surgeon',
   fields: () => ({
     id: {

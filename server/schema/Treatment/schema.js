@@ -6,13 +6,13 @@ import {
 } from 'graphql';
 
 import Surgeon from '../Surgeon/schema';
-import createSecureGraphQLObjectType from '../../core/graphql/authorized/createAuthorizedGraphQLObjectType';
+import createAuthorizedGraphQLQueryType from '../../core/graphql/authorized/createAuthorizedGraphQLQueryType';
 
 //import joinMonster from 'join-monster';
 
 console.log('SURGOEN:', Surgeon);
 
-const treatment = createSecureGraphQLObjectType({
+const treatment = createAuthorizedGraphQLQueryType({
   name: 'Treatment',
   fields: () => ({
     id: {

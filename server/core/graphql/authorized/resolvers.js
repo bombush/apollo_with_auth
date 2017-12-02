@@ -40,6 +40,10 @@ const handleUnauthorizedNonNullField = errorMessage => () => {
 
 const handleUnauthorizedNullableField = errorMessage => () => null;
 
+const handleUnauthorizedMutationField = () => () => {
+  throw new Error('Unauthorized operation. Denied.');
+}
+
 
 /**
  * Create a resolver that uses an arbitrary security checking strategy for each field
@@ -51,19 +55,10 @@ const handleUnauthorizedNullableField = errorMessage => () => null;
 const createAuthorizedQueryResolver =
   (securityConditionPost, originalResolver) => 
     (parent, args, context, resolveInfo) => {
-      if(!securityConditionPost) return null;
-
-      //console.log('RESOLVE INFO:', resolveInfo);
-      //console.log('PARENT', parent);
-
-      // original field value
-      const originalFieldValue = originalResolver(parent, args, context, resolveInfo);
-
-      console.log('RT:', resolveInfo.returnType); 
-      
       /**
        * Test type
        * is array return type, e.g. [Surgeon]
+       * @TODO: extract for tests
        */
       const isArrayReturnType = /^\[.*!?\]!?$/.test(resolveInfo.returnType);
       const areValuesInsideNonNull = /!(\]!?)?$/.test(resolveInfo.returnType);
@@ -72,9 +67,31 @@ const createAuthorizedQueryResolver =
        * Employ different strategies for handling array and value return types
        */
       const unauthorizedFieldHandler =
-        areValuesInsideNonNull 
-        ? handleUnauthorizedNonNullField
-        : handleUnauthorizedNullableField;
+      areValuesInsideNonNull 
+      ? handleUnauthorizedNonNullField
+      : handleUnauthorizedNullableField;
+
+      const unauthorizedArrayFieldHandler =
+        unauthorizedFieldHandler(`Access denied on a non-null member of array field 
+          "${resolveInfo.fieldName}" on object of type "${resolveInfo.parentType}".`);
+
+      const unauthorizedValueFieldHandler =
+        unauthorizedFieldHandler(`A value of field "${resolveInfo.fieldName}" on object 
+          of type "${resolveInfo.parentType}" was filtered by authorization.`)
+
+
+      // if no rules are specified, the field is automatically unauthorized
+      if(!securityConditionPost) {
+        return unauthorizedValueFieldHandler();
+      }
+
+      //console.log('RESOLVE INFO:', resolveInfo);
+      //console.log('PARENT', parent);
+
+      // original field value
+      const originalFieldValue = originalResolver(parent, args, context, resolveInfo);
+
+      console.log('RT:', resolveInfo.returnType); 
 
       /**
        * Create security callback
@@ -88,15 +105,13 @@ const createAuthorizedQueryResolver =
       if(isArrayReturnType) {
         return authorizeArrayReturnType(
             secureConditionCallback,
-            unauthorizedFieldHandler(`Access denied on a non-null member of array field 
-              "${resolveInfo.fieldName}" on object of type "${resolveInfo.parentType}".`)
+            unauthorizedArrayFieldHandler
           )(originalFieldValue);
 
       } else {//console.log('Array return type');
         return authorizeValueReturnType(
             secureConditionCallback,
-            unauthorizedFieldHandler(`A value of field "${resolveInfo.fieldName}" on object 
-              of type "${resolveInfo.parentType}" was filtered by authorization.`)
+            unauthorizedValueFieldHandler
           )(originalFieldValue);
       }
 
@@ -104,7 +119,26 @@ const createAuthorizedQueryResolver =
     // if is an array of GraphQL non null, throw
     }
 
+
+const createAuthorizedMutationResolver =
+  (securityConditionPre, originalResolver) =>
+    (parent, args, context, resolveInfo) => {
+      if(!securityConditionPre) {
+        return handleUnauthorizedMutationField()();
+      }
+
+      // mutation must be authorized *before* actually performing it
+      if(securityConditionPre(parent, args, context, resolveInfo)) {
+        const originalFieldValue = originalResolver(parent, args, context, resolveInfo);
+        return originalFieldValue;
+      }
+
+      return handleUnauthorizedMutationField()();
+    }
+
+
 export {
   nullResolver,
-  createAuthorizedQueryResolver
+  createAuthorizedQueryResolver,
+  createAuthorizedMutationResolver
 }
