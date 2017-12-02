@@ -14,7 +14,7 @@ import Treatment from '../Treatment/schema';
 import Procedure from '../Procedure/schema';
 import resolvers from './resolvers';
 //import  SecureGraphQLObjectType from '../../core/graphql/SecureGraphQLObjectType';
-import createSecureGraphQLObjectType from '../../core/graphql/createSecureGraphQLObjectType';
+import createSecureGraphQLObjectType from '../../core/graphql/authorized/createAuthorizedGraphQLObjectType';
 
 const PageInfo = new GraphQLObjectType({
   name: 'PageInfo',
@@ -53,13 +53,13 @@ const surgeon = createSecureGraphQLObjectType({
       sqlColumn: 'username'
     },
     name: {
-      type: GraphQLString
+      type: GraphQLString,
+      sqlColumn: 'name'
     },
     treatments: {
-      type: new GraphQLList(Treatment),
+      type: new GraphQLList(new GraphQLNonNull(Treatment)),
       
       sqlJoin: (parentTable, childTable, args) => `${parentTable}.id = ${childTable}.user_id`,
-
     },
     /*
     procedures: {
@@ -126,7 +126,13 @@ const surgeon = createSecureGraphQLObjectType({
       resolve: () => true
     },
     username: { 
-      resolve: root => root.username === 'tester' ? true : false
+      resolve: username => username === 'tester' ? true : false
+    },
+    treatments: {
+      resolve: treatment => console.log('Treatment:', treatment) || true
+    },
+    procedures: {
+      resolve: () => true
     }
 });
 

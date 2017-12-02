@@ -50,6 +50,29 @@ const start = async () => {
     subscriptionsEndpoint: `ws://localhost:${PORT}/subscriptions`
   }));
 
+  app.get('/test', (req, res) => {
+    sequelize.query(`SELECT
+    "surgeon"."id" AS "id",
+    "surgeon"."username" AS "username",
+    "surgeon"."name" AS "name",
+    "treatments"."id" AS "treatments__id",
+    "treatments"."name" AS "treatments__name",
+    "procedures"."id" AS "procedures__id",
+    "procedures"."date" AS "procedures__date"
+  FROM "user" "surgeon"
+  LEFT JOIN treatment "treatments" ON "surgeon".id = "treatments".user_id
+  LEFT JOIN LATERAL (
+    SELECT "procedures".*
+    FROM "procedure" "procedures"
+  
+    WHERE "surgeon".id = "procedures".user_id
+    ORDER BY "procedures"."id" DESC
+    LIMIT ALL
+  ) "procedures" ON "surgeon".id = "procedures".user_id
+  WHERE ("surgeon".id = 1)`)
+  .then(result => res.send(result));
+  } );
+
   const server = createServer(app);
   server.listen(PORT, () => {
     SubscriptionServer.create(
