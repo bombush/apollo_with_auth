@@ -14,6 +14,8 @@ import {
 } from 'graphql';
 import joinMonster from 'join-monster';
 
+import createAuthorizedGraphQLMutationType from '../../core/graphql/authorized/createAuthorizedGraphQLMutationType';
+
 /**
  *  type Query {
     me: User 
@@ -27,7 +29,7 @@ import joinMonster from 'join-monster';
 
 
 
- const mutation = new GraphQLObjectType({
+ const mutation = createAuthorizedGraphQLMutationType({
   name: 'Mutation',
   fields: () => ({
     addProcedure: {
