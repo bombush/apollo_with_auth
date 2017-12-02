@@ -48,7 +48,7 @@ import { nullResolver } from './resolvers';
      */
     const newFields = Object.keys(originalFields)
       .reduce((fieldCarry, fieldName) => {
-        let authResolver = null;
+        let authorizationCallback = null;
 
         if( typeof(authorizationSchema) === 'undefined'
           || typeof(authorizationSchema[fieldName]) === 'undefined'
@@ -56,10 +56,10 @@ import { nullResolver } from './resolvers';
           || authorizationSchema[fieldName] === false
           || typeof(authorizationSchema[fieldName].resolve) !== 'function'
         ) {
-          authResolver = null;
+          authorizationCallback = null;
         
         } else {
-          authResolver = authorizationSchema[fieldName].resolve;
+          authorizationCallback = authorizationSchema[fieldName].resolve;
         }
     
         // @TODO: optimize performance
@@ -68,7 +68,7 @@ import { nullResolver } from './resolvers';
           [fieldName]: {
             ...originalFields[fieldName], 
             resolve: createAuthorizedResolver(
-              authResolver,
+              authorizationCallback,
               originalFields[fieldName].resolve || defaultFieldResolver
             )  
           } 
