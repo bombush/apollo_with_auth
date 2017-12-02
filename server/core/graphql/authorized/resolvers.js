@@ -128,7 +128,7 @@ const createAuthorizedMutationResolver =
       }
 
       // mutation must be authorized *before* actually performing it
-      if(securityConditionPre(parent, args, context, resolveInfo)) {
+      if(securityConditionPre(undefined, parent, args, context, resolveInfo)) {
         const originalFieldValue = originalResolver(parent, args, context, resolveInfo);
         return originalFieldValue;
       }
