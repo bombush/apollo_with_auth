@@ -49,7 +49,7 @@ const handleUnauthorizedNullableField = errorMessage => () => null;
  * @param {*} originalResolver 
  */
 const createAuthorizedQueryResolver =
-(securityConditionPost, originalResolver) => 
+  (securityConditionPost, originalResolver) => 
     (parent, args, context, resolveInfo) => {
       if(!securityConditionPost) return null;
 
@@ -100,9 +100,9 @@ const createAuthorizedQueryResolver =
           )(originalFieldValue);
       }
 
-  // if is GraphQL non null throw
-  // if is an array of GraphQL non null, throw
-}
+    // if is GraphQL non null throw
+    // if is an array of GraphQL non null, throw
+    }
 
 export {
   nullResolver,
